@@ -1,0 +1,32 @@
+apiVersion: gpugroup.gpugroup.domain/v1
+kind: AutoScaler
+metadata:
+  annotations:
+    test-annotations-key: test-annotations-value
+  labels:
+    test-labels-key: test-labels-value
+  name: autoscaler-test-001
+  namespace: test-scaler
+spec:
+  replicas: 0
+  autoCreateService: true
+  podsCreationTimeOutSeconds: 100
+  podTemplate:
+    metadata:
+      labels:
+        test-labels-key: test-labels-value
+        owner: autoscaler-test-001
+      annotations:
+        test-annotations-key: test-annotations-value
+    spec:
+      containers:
+      - name: base-image-container-v3
+        command:
+        - /bin/sh
+        args:
+        - '-c'
+        - chmod 774 /home/workdir/start.sh && /home/workdir/start.sh && sleep 99999999
+        image: base-ubuntu:18.04
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9876
